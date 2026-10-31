@@ -1,0 +1,33 @@
+/* AttendancePage: page-specific styles. Shared buttons, tables, panels and layout primitives remain in ../styles.css. */
+.module-page--attendance {
+  min-width: 0;
+  width: 100%;
+}
+.module-page--attendance .page-heading {
+  min-width: 0;
+}
+.module-page--attendance .panel {
+  min-width: 0;
+}
+.module-page--attendance .table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+@media (max-width: 680px) {
+  .module-page--attendance .page-heading {
+    gap: 12px;
+  }
+  .module-page--attendance .table-wrap table {
+    min-width: 620px;
+  }
+}
+.attendance-camera { margin: 18px 0; padding: 20px; }
+.attendance-video { display:block; width:min(100%,480px); max-height:480px; aspect-ratio:4/5; object-fit:cover; margin:16px auto; border-radius:16px; background:#102b3a; }
+.attendance-camera-actions { display:flex; justify-content:center; }
+.attendance-error { margin-top:12px; padding:11px 13px; color:#a52d35; background:#fff1f1; border:1px solid #ffd8d8; border-radius:10px; font-size:13px; }
+.attendance-privacy { color:#718694; font-size:12px; text-align:center; margin-bottom:0; }
+.module-page--attendance .cell-sub { display:block; margin-top:4px; }
+.module-page--attendance .cell-sub a, .module-page--attendance td a { color:#168fc9; font-weight:600; }
+
+.attendance-status { margin-top: 12px; padding: 11px 13px; color: #145b3a; background: #eaf8f0; border: 1px solid #c7ecd6; border-radius: 10px; font-size: 13px; text-align: center; }
+.attendance-camera-actions .btn:disabled { opacity: .6; cursor: not-allowed; }

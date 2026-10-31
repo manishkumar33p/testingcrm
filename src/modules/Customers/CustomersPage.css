@@ -1,0 +1,23 @@
+/* CustomersPage: page-specific styles. Shared buttons, tables, panels and layout primitives remain in ../styles.css. */
+.module-page module-page--customers {
+  min-width: 0;
+  width: 100%;
+}
+.module-page module-page--customers .page-heading {
+  min-width: 0;
+}
+.module-page module-page--customers .panel {
+  min-width: 0;
+}
+.module-page module-page--customers .table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+@media (max-width: 680px) {
+  .module-page module-page--customers .page-heading {
+    gap: 12px;
+  }
+  .module-page module-page--customers .table-wrap table {
+    min-width: 620px;
+  }
+}

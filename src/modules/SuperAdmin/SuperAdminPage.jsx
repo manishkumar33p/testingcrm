@@ -1,0 +1,29 @@
+import React, { useState } from 'react';
+import { Stat, Status, Field } from '../../components/common';
+import './SuperAdminPage.css';
+
+export default function SuperAdminPage({ page, companies, setPage, onCreateCompanyOwner, onOpenCompany, onResetOwnerPassword }) {
+  const [form, setForm] = useState({ companyName:'', ownerName:'', email:'', password:'', phone:'', plan:'Growth', seatLimit:'15' });
+  const active = companies.filter(c => c.status === 'Active').length;
+  const submit = async e => { const ok = await onCreateCompanyOwner(e, { ...form, seatLimit:Number(form.seatLimit) }); if (ok) setForm({ companyName:'', ownerName:'', email:'', password:'', phone:'', plan:'Growth', seatLimit:'15' }); };
+  return <div className="module-page module-page--super-admin">
+    <div className="page-heading"><div><div className="eyebrow">PLATFORM CONTROL CENTER</div><h1>{page==='Companies'?'Client companies':page==='Subscriptions'?'Plans & subscriptions':'Platform overview'}</h1><p>Create a company and Owner login together. Firebase Authentication and Firestore profiles are created automatically on the free Spark workflow.</p></div><div className="heading-actions"><span className="pill">Super Admin controlled</span></div></div>
+    <div className="stats-grid"><Stat label="Total companies" value={companies.length} change="Registered workspaces" icon="▦" tone="purple" foot="Across all plans"/><Stat label="Active companies" value={active} change="Current status" icon="✓" tone="green" foot="Workspace status"/><Stat label="Total employee seats" value={companies.reduce((s,c)=>s+Number(c.seatLimit||c.users||0),0)} change="Configured capacity" icon="♙" tone="blue" foot="Seat limit per company"/><Stat label="Plans in use" value={new Set(companies.map(c=>c.plan)).size} change="Configured plans" icon="◇" tone="orange" foot="Billing is not connected"/></div>
+    {page==='Subscriptions' && <div className="plan-grid">{[['Starter','₹299','Up to 5 seats','Leads and basic reports'],['Growth','₹799','Up to 15 seats','Attendance, visits and reports'],['Business','₹1,499','Up to 100 seats','Larger team workspace']].map(p=><div className="panel plan-card" key={p[0]}><span className="pill">PLAN TEMPLATE</span><h2>{p[0]}</h2><h3>{p[1]}<small>/ month</small></h3><p>{p[2]}</p><div className="plan-rule"/><p>{p[3]}</p><button className="btn secondary" onClick={()=>setPage('Companies')}>Manage companies</button></div>)}</div>}
+    {page!=='Subscriptions' && <>
+      {page==='Companies' && <section className="panel company-create-panel"><div className="panel-head"><div><h3>＋ Create company & Owner profile</h3><p>Spark Plan: Company, Owner Authentication login and Firestore profile are created together. Use a temporary password and share it securely.</p></div></div>
+        <form className="form-grid super-company-form" onSubmit={submit}>
+          <Field label="Company name" required><input required value={form.companyName} onChange={e=>setForm({...form,companyName:e.target.value})} placeholder="e.g. Rihaos Realtor"/></Field>
+          <Field label="Owner full name" required><input required value={form.ownerName} onChange={e=>setForm({...form,ownerName:e.target.value})} placeholder="Owner name"/></Field>
+          <Field label="Owner login email" required><input required type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} placeholder="owner@company.com"/></Field>
+          <Field label="Temporary Owner password" required><input required type="password" minLength="8" autoComplete="new-password" value={form.password} onChange={e=>setForm({...form,password:e.target.value})} placeholder="At least 8 characters"/></Field>
+          <Field label="Owner phone"><input value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} placeholder="Phone number"/></Field>
+          <Field label="Plan"><select value={form.plan} onChange={e=>setForm({...form,plan:e.target.value})}>{['Starter','Growth','Business','Enterprise'].map(x=><option key={x}>{x}</option>)}</select></Field>
+          <Field label="Employee seat limit"><select value={form.seatLimit} onChange={e=>setForm({...form,seatLimit:e.target.value})}>{['5','15','30','100','500'].map(x=><option key={x} value={x}>{x} seats</option>)}</select></Field>
+          <div className="modal-actions"><button className="btn primary">Create company + Owner profile →</button></div>
+        </form>
+      </section>}
+      <section className="panel companies-panel"><div className="panel-head"><div><h3>All client companies</h3><p>Each company has its own ID, Owner account, employee roster and CRM data.</p></div><div className="table-count">{companies.length} companies</div></div><div className="table-wrap"><table><thead><tr><th>COMPANY / OWNER</th><th>COMPANY ID</th><th>PLAN</th><th>SEATS</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody>{companies.map(c=><tr key={c.id}><td><div className="company-table-cell"><div className="company-avatar" style={{background:c.color||'#55b9ee'}}>{c.short||c.name?.slice(0,2).toUpperCase()}</div><div><b>{c.name}</b><small>{c.ownerName || 'Owner details not recorded'}{c.ownerEmail ? ` · ${c.ownerEmail}` : ''}</small></div></div></td><td><code>{c.id}</code></td><td><span className="plan-label">{c.plan||'Growth'}</span></td><td>{c.seatLimit||c.users||0} seats</td><td><Status value={c.status||'Active'}/></td><td><div className="employee-actions"><button className="btn small secondary" onClick={()=>onOpenCompany(c)}>Open workspace ↗</button>{c.ownerUid && <button className="btn small secondary" onClick={()=>onResetOwnerPassword(c)}>Reset Owner password</button>}</div></td></tr>)}</tbody></table>{!companies.length&&<div className="empty-state"><div>▦</div><h3>No companies yet</h3><p>Use the form above to create the first company and Owner login.</p></div>}</div></section>
+    </>}
+  </div>;
+}

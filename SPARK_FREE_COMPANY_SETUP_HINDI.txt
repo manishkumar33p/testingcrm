@@ -1,0 +1,7 @@
+SPARK FREE COMPANY CREATION
+
+Super Admin ke Company form mein Company, Owner name, Owner email aur kam se kam 8-character temporary password bharein. Submit par app Firebase Authentication mein Owner account secondary Firebase app se banata hai, phir companies, users aur companySettings Firestore documents ek batch mein save karta hai. Super Admin ka current login session bana rehta hai.
+
+Zaroori: Firebase Console → Authentication mein Email/Password provider enabled hona chahiye. Firestore Rules mein users/companies/companySettings create permissions Super Admin ke liye enabled honi chahiye. Public signup enabled hone ka matlab ye nahi ki user ko CRM access mil jayega; valid users/{uid} profile zaroori hai.
+
+Owner temporary password ko securely share karein aur first login ke baad change karwayein. Password Firestore mein store nahi hota. Ye client-side Spark-compatible flow hai; ise high-scale SaaS ke liye production security review ke bina final na maanein.

@@ -1,0 +1,41 @@
+ESTATEFLOW CRM — LOCAL DEMO MODE (NO PAID FIREBASE REQUIRED)
+
+यह ZIP अभी client presentation/testing के लिए LOCAL DEMO MODE पर सेट है। Firebase Blaze upgrade या Firebase deploy करने की जरूरत नहीं है।
+
+WINDOWS पर चलाने के तरीके:
+1. ZIP extract करें।
+2. Extract किए हुए EstateFlow_CRM_SuperAdmin_Owner_Employee_Control folder में CMD खोलें।
+3. चलाएँ: npm install
+4. पूरा होने पर चलाएँ: npm start
+5. Browser में जो localhost URL आए, उसे खोलें (आमतौर पर http://localhost:3000)।
+
+DEMO LOGIN:
+Super Admin
+Email: admin@estateflow.demo
+Password: Demo@123
+
+Company Owner
+Email: owner@rihaos.demo
+Password: Owner@123
+
+Employee
+Email: employee@rihaos.demo
+Password: Staff@123
+
+DEMO FEATURES:
+- Super Admin से demo company और Owner login बनाना
+- Owner से demo employee बनाना, edit करना, password reset करना
+- Leads, properties, payroll, attendance और settings में demo data
+- Browser refresh के बाद data localStorage में बना रहता है
+- Company IDs अलग रखे गए हैं; local demo companies का data अलग store होता है
+
+IMPORTANT LIMITATIONS:
+- यह local demo है, real authentication/security system नहीं। Demo passwords browser storage में होते हैं। इसे production या real client data के लिए इस्तेमाल न करें।
+- Data केवल इसी browser/profile और इसी computer में रहता है; दूसरे computer/phone या दूसरे browser में sync नहीं होगा। Browser storage clear करने पर demo data मिट सकता है।
+- Attendance screen selfie/GPS input माँग सकती है; demo में selfie image cloud पर upload नहीं होती। Demo check-in/check-out record local browser में save होता है।
+- Firebase Cloud Functions/Storage/production deployment इस mode में जरूरी नहीं है। इसलिए अभी Blaze billing upgrade न करें।
+
+जब client को live multi-device product देना हो, तब अलग production Firebase project, Authentication, Firestore rules, Storage, Cloud Functions और billing/usage limits configure करके DEMO_MODE को false करना तथा Firebase integration को test करना होगा।
+
+WHATSAPP ALERT PREPARATION:
+WhatsApp ke liye code scaffold aur setup notes `WHATSAPP_SETUP_HINDI.txt` mein hain. Yeh abhi live message nahi bhejta. Meta API credentials, approved template, Firebase Blaze backend, aur follow-up se outbox banane wala secure integration baad mein complete karna hoga.

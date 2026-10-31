@@ -1,0 +1,51 @@
+ESTATEFLOW CRM — WHATSAPP ALERT PREPARATION (LOCAL DEMO)
+
+स्थिति:
+- यह ZIP WhatsApp integration के लिए backend code scaffold और setup notes रखती है.
+- Local Demo में अभी WhatsApp messages नहीं भेजे जाते.
+- Frontend Follow-up form अभी whatsappOutbox documents नहीं बनाता; यह अलग integration step है.
+- जब तक Meta credentials और approved template configure नहीं होते, scheduled function कोई WhatsApp message नहीं भेजेगा.
+
+WhatsApp reminder flow:
+1. Employee/Owner CRM में lead का follow-up date/time set करता है.
+2. Backend एक whatsappOutbox document बनाता है, हर recipient के लिए अलग:
+   {
+     companyId: "company-id",
+     leadId: "lead-id",
+     recipientRole: "employee" or "owner",
+     recipientName: "Amit",
+     phone: "+91XXXXXXXXXX", // E.164 digits with country code
+     leadName: "Rahul Sharma",
+     followUpLabel: "30 Oct 2026, 10:00 AM",
+     task: "Call the lead",
+     dueAt: Firestore Timestamp,
+     status: "pending"
+   }
+3. processWhatsAppReminderOutbox runs every 5 minutes (Asia/Kolkata), finds due pending items, and calls Meta Cloud API.
+4. Delivery request status becomes sent or failed. 'sent' means Meta accepted the API request; final delivery receipts/webhooks are not implemented in this scaffold.
+
+IMPORTANT - NOT LIVE YET:
+- Do not deploy before setting up the Meta WhatsApp Cloud API, a valid phone number ID, access token, and approved template.
+- The template configured by default is estateflow_followup_reminder, language en_US, with 4 body parameters in this order:
+  1 recipientName
+  2 leadName
+  3 followUpLabel
+  4 task
+  Create/approve a matching template in WhatsApp Manager first, or change WHATSAPP_TEMPLATE_NAME / language in functions/index.js.
+- Do not place Meta access tokens in React code, .env files bundled into the frontend, GitHub, or ZIP shared with clients.
+- Store token as Firebase Functions secret: firebase functions:secrets:set WHATSAPP_ACCESS_TOKEN
+- Set function parameters using Firebase environment/parameter configuration:
+  WHATSAPP_PHONE_NUMBER_ID = your Meta Phone Number ID
+  WHATSAPP_API_VERSION = a currently supported Graph API version
+  WHATSAPP_TEMPLATE_NAME = your approved template name
+- This scheduled function requires Firebase Blaze billing and scheduled-function infrastructure. Charges may apply.
+- Current frontend reminder scheduling must be wired to create whatsappOutbox entries for the Employee and same-company Owner. That tenant-safe integration is not completed by this scaffold.
+- Add security rules to prevent client users from writing arbitrary whatsappOutbox jobs. Prefer creating outbox entries only from trusted Cloud Functions after validating companyId, lead assignment, and recipient roles.
+- Add WhatsApp webhooks/status callbacks and retry policy before production use. Current status 'sent' means API accepted the request, not that the recipient received/read it.
+
+Suggested test order:
+1. Keep Local Demo unchanged and test follow-up UI.
+2. Create Meta test app/number and test approved template directly with Meta's test tools.
+3. Deploy Firebase Functions only after billing, secrets, parameters, and template are configured.
+4. Wire trusted follow-up scheduling to create outbox entries.
+5. Test employee + owner in one demo company and confirm another company cannot receive the alert.

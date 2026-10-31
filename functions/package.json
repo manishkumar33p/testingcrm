@@ -1,0 +1,11 @@
+{
+  "name": "estateflow-functions",
+  "description": "Secure company onboarding and owner-managed employee accounts for EstateFlow CRM",
+  "private": true,
+  "engines": { "node": "20" },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^13.0.2",
+    "firebase-functions": "^6.3.2"
+  }
+}

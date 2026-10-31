@@ -1,0 +1,44 @@
+/* Login layout is styled here; shared theme tokens are in styles.css. */
+.login-page { min-height:100vh; display:grid; grid-template-columns:minmax(320px, .92fr) minmax(420px,1.08fr); background:#f5fbff; }
+.login-left { position:relative; min-height:100vh; overflow:hidden; padding:38px clamp(28px,5vw,76px); color:#12344a; background:linear-gradient(145deg,#eaf8ff 0%,#d8f1ff 52%,#f7fcff 100%); display:flex; flex-direction:column; }
+.login-brand .brand-logo { background:#ffffff; color:#168ac4; box-shadow:0 12px 28px #7fc6e833; }
+.login-brand .brand-text strong { color:#163d54; font-size:17px; letter-spacing:.02em; }
+.login-brand .brand-text strong span { color:#20a7e8; }
+.login-brand .brand-text small { color:#58829a; }
+.login-hero { position:relative; z-index:1; margin:auto 0; max-width:600px; padding:64px 0 90px; }
+.login-hero h1 { font-size:clamp(36px,4.3vw,58px); line-height:1.12; letter-spacing:-.045em; color:#103b55; margin:22px 0 18px; }
+.login-hero h1 em { color:#168fc9; font-style:normal; }
+.login-hero p { color:#50758a; max-width:460px; font-size:16px; line-height:1.8; }
+.login-hero .pill { background:#fff; color:#1889bd; border:1px solid #c6eafa; }
+.hero-points { display:grid; gap:13px; margin-top:30px; color:#285b75; font-weight:600; font-size:14px; }
+.login-decoration { position:absolute; right:-40px; bottom:70px; width:280px; height:240px; opacity:.7; }
+.login-decoration .orbit { border-color:#85d0f3; }
+.login-decoration .float-card { background:#fff; border:1px solid #d6effa; box-shadow:0 14px 38px #388ab31c; }
+.login-foot { color:#5e879b; font-size:12px; position:relative; z-index:1; }
+.login-right { display:flex; align-items:center; justify-content:center; padding:36px clamp(22px,4vw,70px); background:#fff; }
+.login-box { width:min(100%,560px); padding:0; }
+.login-box h2 { color:#173b52; font-size:32px; margin:10px 0; letter-spacing:-.03em; }
+.login-box>p { color:#6d8492; line-height:1.6; margin-bottom:26px; }
+.login-box .eyebrow { color:#168fc9; font-weight:800; letter-spacing:.13em; }
+.role-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:22px 0 25px; }
+.role-cards button { border:1px solid #dceaf1; background:#fff; border-radius:14px; padding:15px 10px; text-align:left; color:#24495d; cursor:pointer; min-width:0; transition:.18s ease; }
+.role-cards button>span { display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:10px; background:#edf8ff; color:#158ec9; margin-bottom:12px; font-size:18px; }
+.role-cards button b { display:block; font-size:12px; line-height:1.4; }
+.role-cards button small { display:block; margin-top:5px; color:#8095a1; font-size:10px; line-height:1.4; }
+.role-cards button.chosen { border-color:#54b9e8; background:#f0faff; box-shadow:0 0 0 3px #dff4ff; }
+.login-input-label { display:block; margin:15px 0; color:#355a6f; font-size:13px; font-weight:700; }
+.login-input-label input { width:100%; margin-top:8px; border:1px solid #d8e7ee; background:#fbfdff; border-radius:11px; padding:13px 14px; outline:none; color:#193f54; }
+.login-input-label input:focus { border-color:#4bb8e9; box-shadow:0 0 0 3px #e0f5ff; }
+.password-wrap { display:flex; align-items:center; border:1px solid #d8e7ee; background:#fbfdff; border-radius:11px; margin-top:8px; }
+.password-wrap input { border:0; margin:0; box-shadow:none!important; background:transparent; }
+.password-wrap button { border:0; background:transparent; color:#168fc9; font-size:12px; font-weight:800; padding:0 14px; cursor:pointer; }
+.login-btn { width:100%; justify-content:center; padding:14px 18px; border-radius:11px; margin-top:8px; background:linear-gradient(135deg,#26a8e2,#168bc8); box-shadow:0 10px 20px #168bc82b; }
+.login-btn:disabled { opacity:.65; cursor:wait; }
+.login-error { background:#fff2f2; border:1px solid #ffd5d5; color:#a32e36; border-radius:10px; padding:11px 13px; font-size:12px; line-height:1.5; margin:14px 0; }
+.login-warning { display:flex; gap:10px; margin-top:18px; padding:13px; border-radius:12px; background:#f3faff; border:1px solid #d9effb; color:#5d7d90; font-size:11px; line-height:1.55; }
+.login-warning p { margin:0; }
+.login-warning b { color:#29566e; }
+.login-bottom-note { margin-top:24px; text-align:center; color:#91a6b2; font-size:10px; letter-spacing:.12em; font-weight:800; }
+.login-bottom-note span { color:#26a8e2; padding:0 7px; }
+@media(max-width:900px) { .login-page { grid-template-columns:1fr; } .login-left { min-height:420px; padding:26px; } .login-hero { padding:55px 0 60px; margin:0; } .login-decoration { display:none; } .login-foot { margin-top:auto; } .login-right { padding:34px 22px; } }
+@media(max-width:480px) { .role-cards { grid-template-columns:1fr; } .role-cards button { display:grid; grid-template-columns:34px 1fr; column-gap:10px; align-items:center; padding:11px; } .role-cards button>span { grid-row:span 2; margin:0; } .role-cards button small { margin-top:2px; } .login-box h2 { font-size:27px; } }

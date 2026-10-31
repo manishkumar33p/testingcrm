@@ -1,0 +1,23 @@
+/* BookingsPage: page-specific styles. Shared buttons, tables, panels and layout primitives remain in ../styles.css. */
+.module-page module-page--bookings {
+  min-width: 0;
+  width: 100%;
+}
+.module-page module-page--bookings .page-heading {
+  min-width: 0;
+}
+.module-page module-page--bookings .panel {
+  min-width: 0;
+}
+.module-page module-page--bookings .table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+@media (max-width: 680px) {
+  .module-page module-page--bookings .page-heading {
+    gap: 12px;
+  }
+  .module-page module-page--bookings .table-wrap table {
+    min-width: 620px;
+  }
+}

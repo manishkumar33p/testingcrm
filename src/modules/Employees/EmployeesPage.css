@@ -1,0 +1,31 @@
+/* EmployeesPage: page-specific styles. Shared buttons, tables, panels and layout primitives remain in ../styles.css. */
+.module-page module-page--employees {
+  min-width: 0;
+  width: 100%;
+}
+.module-page module-page--employees .page-heading {
+  min-width: 0;
+}
+.module-page module-page--employees .panel {
+  min-width: 0;
+}
+.module-page module-page--employees .table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+@media (max-width: 680px) {
+  .module-page module-page--employees .page-heading {
+    gap: 12px;
+  }
+  .module-page module-page--employees .table-wrap table {
+    min-width: 620px;
+  }
+}
+
+.credential-panel { display:grid; gap:12px; }
+.credential-panel > div:not(.modal-actions) { display:grid; gap:4px; border:1px solid #dceaf1; border-radius:10px; padding:12px; background:#f8fcff; overflow-wrap:anywhere; }
+.credential-panel small { color:#6d8492; font-size:11px; text-transform:uppercase; letter-spacing:.06em; }
+.credential-panel b { color:#183f54; font-size:14px; }
+.credential-panel .temporary-password { font-family:monospace; font-size:17px; color:#0876aa; }
+
+.employee-actions{display:flex;gap:6px;flex-wrap:wrap}.employee-actions .btn{font-size:9px}

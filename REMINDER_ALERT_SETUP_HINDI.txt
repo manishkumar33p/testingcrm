@@ -1,0 +1,23 @@
+ESTATEFLOW CRM — EMPLOYEE REMINDER ALERT UPDATE
+
+इस अपडेट में क्या बदला है?
+1. Follow-up reminder due होने पर Firebase में notification record सेव होता है।
+2. Notification केवल उसी assigned employee के login के Bell icon में दिखेगा।
+3. Employee Mark read कर सकता है; read status Firebase में सेव होगा।
+4. Reminder/notification कंपनी के Firestore path companyData/{companyId}/notifications में रहता है।
+
+जरूरी Firebase कदम:
+1. इस ZIP की firestore.rules फाइल खोलें।
+2. Firebase Console > Firestore Database > Rules में पूरा नया कोड paste करें।
+3. Publish दबाएँ।
+पुराने rules का backup पहले रख लें।
+
+टेस्ट कैसे करें:
+1. Owner login करें और Leads में एक test lead बनाएँ।
+2. Assigned To में employee का वही नाम चुनें जो Employee Login profile में है।
+3. Follow-ups में reminder वर्तमान समय से 2-3 मिनट आगे रखें और Set reminder करें।
+4. Employee login को खुले रखें। Due time आने के बाद Bell icon में alert दिखना चाहिए।
+5. Bell खोलें, Mark read दबाएँ, फिर refresh करके देखें कि read status बना रहता है।
+
+सीमा:
+यह Spark/zero-billing friendly client-side reminder checker है। Reminder time पर Owner या assigned Employee का CRM browser खुला होना चाहिए। अगर दोनों बंद हैं, तो alert अगली बार CRM खुलने पर बनेगा। Browser बंद होने पर background push / scheduled alert के लिए server scheduler/Cloud Functions जैसी backend व्यवस्था चाहिए; इसे Spark-only में शामिल नहीं किया गया है। WhatsApp automatic reminder भी इस update में शामिल नहीं है।

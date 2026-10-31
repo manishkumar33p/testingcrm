@@ -1,0 +1,36 @@
+ESTATEFLOW CRM — SPARK / ZERO-BILLING WORKFLOW STATUS
+
+इस अपडेट में:
+1. Super Admin द्वारा Company + Owner Auth account + Firestore profile + companySettings creation secondary Firebase Auth app से होती है। इससे Super Admin session बना रहता है।
+2. Company Owner द्वारा Employee Auth account secondary Firebase Auth app से बनाया जाता है; Firestore users profile और companyData/{companyId}/employees record batch में बनते हैं।
+3. Employee profile active flag और owner द्वारा employee profile update के लिए Firestore Rules अपडेट किए गए हैं।
+4. Owner/Employee login inactive profile को reject करता है।
+5. Owner/Employee password reset Firebase password-reset email flow से होता है; app किसी दूसरे user का password खुद नहीं पढ़/बदल सकता।
+6. Leads, Properties, Attendance, Payroll, Bookings आदि existing app modules Firestore companyData hooks से sync करते हैं; live production data के साथ हर workflow का end-to-end test अभी आवश्यक है।
+
+IMPORTANT LIMITATIONS — PLEASE READ
+A. WhatsApp AUTOMATIC scheduled reminders इस Spark-only package में चालू नहीं हैं। मौजूदा functions/index.js scheduled outbox processor Firebase Cloud Functions / scheduler और Meta WhatsApp Cloud API credentials पर निर्भर है। यह Blaze billing के बिना deploy नहीं हो सकता। इसीलिए इसे जानबूझकर deploy target से हटाया गया है। Manual WhatsApp click-to-chat अलग सुविधा है; यह scheduled automation नहीं है।
+B. Attendance selfie uploads Firebase Storage पर निर्भर हैं। Storage bucket/rules और आपके Firebase plan की मौजूदा eligibility/quotas को console में verify करें; Storage upload सफल हुए बिना attendance selfie flow production-ready नहीं माना जाएगा।
+C. Client-side secondary Auth app workflow Spark-compatible है, पर browser code trusted server नहीं है। Company Owner को केवल employee role / own-company records create करने देने के लिए Rules सीमित किए गए हैं। Production multi-tenant SaaS के लिए privileged account administration, forced password reset, email change, deletion, rate limits, audit logs आदि के लिए trusted backend बेहतर/आवश्यक है।
+D. Firestore Rules को Firebase Console में Rules tab पर manually publish करना होगा। ZIP extract करने से Firebase project में rules अपने आप publish नहीं होते।
+E. Existing Marv company/account को duplicate create न करें। Marv के existing records में ownerUid और users profile को पहले से manually fix किया गया है; new code existing data migrate नहीं करता।
+F. npm ci इस environment में timeout हुआ, इसलिए final production build/run verification का दावा नहीं किया जा रहा। Local machine पर npm install और npm run build चलाकर errors resolve करने होंगे।
+
+DEPLOY STEPS
+1. Existing project backup लें; इस folder ko separately extract/use करें.
+2. src/firebase.js में current Firebase config verify करें.
+3. `npm install` then `npm run build`.
+4. Firebase Console → Firestore → Rules में firestore.rules का पूरा content publish करें.
+5. Storage rules को केवल tab available/eligible होने पर review और publish करें; Storage error आए तो screenshots/error text दें.
+6. Test with a NEW test company and a NEW test owner email; then test owner creates a NEW employee email.
+7. Verify Auth users, users/{uid}, companies/{companyId}, companySettings/{companyId}, companyData/{companyId}/employees/{uid}.
+8. Test each module create/read/update with non-sensitive test data before real use.
+9. Deploy Vercel only after build passes and Firebase Rules are published.
+
+
+REMINDER ALERT UPDATE (30 Oct 2026)
+- Live Firebase reminders now create a persistent notification for the assigned employee when the reminder time becomes due.
+- Employee notification bell reads only notifications addressed to that employee name. Mark as read updates Firestore.
+- The CRM must be open in the owner or assigned employee browser at/after the due time for the client-side checker to create the notification. If all browsers are closed, it will be created the next time the app is opened. True background/push scheduling needs a trusted server scheduler and is not included in Spark-only setup.
+- After replacing the project folder, publish the UPDATED firestore.rules from this ZIP.
+- Test with a lead assigned to the exact employee name, set a reminder 2-3 minutes in the future, keep the employee CRM open, and check the bell.

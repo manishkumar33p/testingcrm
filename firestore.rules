@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function profile() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function isSuperAdmin() { return signedIn() && profile().role == 'superadmin'; }
+    function isCompanyOwner(companyId) { return signedIn() && profile().role == 'owner' && profile().companyId == companyId && profile().active == true; }
+    function isCompanyEmployee(companyId) { return signedIn() && profile().role == 'employee' && profile().companyId == companyId && profile().active == true; }
+    function ownsLead() { return resource.data.assigned == profile().name || resource.data.createdBy == request.auth.uid; }
+    function newLeadBelongsToEmployee() { return request.resource.data.assigned == profile().name || request.resource.data.createdBy == request.auth.uid; }
+
+    match /users/{userId} {
+      allow get: if signedIn() && (request.auth.uid == userId || isSuperAdmin() || (profile().role == 'owner' && resource.data.companyId == profile().companyId));
+      allow list: if isSuperAdmin();
+      // A company owner may create only an employee profile for their own company.
+      allow create: if isSuperAdmin() || (isCompanyOwner(request.resource.data.companyId)
+        && request.resource.data.role == 'employee'
+        && request.resource.data.companyId == profile().companyId
+        && request.resource.data.uid == userId
+        && request.resource.data.active == true);
+      allow update: if (signedIn() && request.auth.uid == userId
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['mustChangePassword'])
+          && request.resource.data.role == resource.data.role
+          && request.resource.data.companyId == resource.data.companyId)
+        || (isCompanyOwner(resource.data.companyId) && resource.data.role == 'employee'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','phone','active']));
+      allow delete: if isSuperAdmin();
+    }
+    match /companies/{companyId} {
+      allow read: if isSuperAdmin() || isCompanyOwner(companyId) || isCompanyEmployee(companyId);
+      allow create, update, delete: if isSuperAdmin();
+    }
+    match /companySettings/{companyId} {
+      allow read: if isSuperAdmin() || isCompanyOwner(companyId) || isCompanyEmployee(companyId);
+      allow create, update, delete: if isSuperAdmin() || isCompanyOwner(companyId);
+    }
+    match /companyData/{companyId}/{collectionName}/{recordId} {
+      allow read: if isSuperAdmin() || isCompanyOwner(companyId)
+        || (isCompanyEmployee(companyId) && (
+          collectionName == 'properties'
+          || (collectionName == 'attendance' && resource.data.employeeId == request.auth.uid)
+          || (collectionName == 'leads' && ownsLead())
+          || (collectionName == 'notifications' && resource.data.recipientRole == 'employee' && resource.data.recipientName == profile().name)
+        ));
+      allow create, update, delete: if isSuperAdmin() || isCompanyOwner(companyId);
+      allow create: if isCompanyEmployee(companyId) && (
+        (collectionName == 'attendance' && request.resource.data.employeeId == request.auth.uid)
+        || (collectionName == 'leads' && newLeadBelongsToEmployee())
+        || (collectionName == 'notifications' && request.resource.data.recipientRole == 'employee' && request.resource.data.recipientName == profile().name)
+      );
+      allow update: if isCompanyEmployee(companyId) && (
+        (collectionName == 'attendance' && resource.data.employeeId == request.auth.uid && request.resource.data.employeeId == request.auth.uid)
+        || (collectionName == 'leads' && ownsLead() && newLeadBelongsToEmployee())
+        || (collectionName == 'notifications' && resource.data.recipientName == profile().name && request.resource.data.recipientName == profile().name)
+      );
+      allow delete: if isCompanyEmployee(companyId) && (
+        (collectionName == 'attendance' && resource.data.employeeId == request.auth.uid)
+        || (collectionName == 'leads' && ownsLead())
+      );
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

@@ -1,0 +1,21 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() { return request.auth != null; }
+    function userProfile() {
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data;
+    }
+    match /attendance/{companyId}/{employeeUid}/{fileName} {
+      allow create, update: if signedIn()
+        && request.auth.uid == employeeUid
+        && userProfile().companyId == companyId
+        && userProfile().role in ['owner', 'employee']
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/jpeg');
+      allow read: if signedIn()
+        && userProfile().companyId == companyId
+        && (request.auth.uid == employeeUid || userProfile().role == 'owner');
+      allow delete: if signedIn() && userProfile().companyId == companyId && userProfile().role == 'owner';
+    }
+  }
+}

@@ -1,0 +1,43 @@
+/* FollowUpsPage: page-specific styles. Shared buttons, tables, panels and layout primitives remain in ../styles.css. */
+.module-page module-page--follow-ups {
+  min-width: 0;
+  width: 100%;
+}
+.module-page module-page--follow-ups .page-heading {
+  min-width: 0;
+}
+.module-page module-page--follow-ups .panel {
+  min-width: 0;
+}
+.module-page module-page--follow-ups .table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+@media (max-width: 680px) {
+  .module-page module-page--follow-ups .page-heading {
+    gap: 12px;
+  }
+  .module-page module-page--follow-ups .table-wrap table {
+    min-width: 620px;
+  }
+}
+
+/* Local demo follow-up reminder controls */
+.module-page--follow-ups .reminder-field { margin-top: 14px; }
+.module-page--follow-ups .reminder-field input { margin-top: 3px; }
+.module-page--follow-ups .follow-actions { flex-wrap: wrap; }
+.module-page--follow-ups .follow-actions .btn { flex: 1 1 auto; }
+.module-page--follow-ups .filter-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.module-page--follow-ups .filter-row .btn { margin-left: auto; }
+.notification-wrap { position: relative; }
+.notification-popover { position: absolute; right: 0; top: calc(100% + 12px); width: min(340px, calc(100vw - 30px)); max-height: 420px; overflow: auto; z-index: 80; background: #fff; border: 1px solid #e8ebf2; border-radius: 13px; box-shadow: 0 18px 45px rgba(23,31,55,.16); color: #273147; }
+.notification-popover-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid #eef0f5; }
+.notification-popover-head b { font-size: 13px; }
+.notification-popover-head button { border: 0; background: #f4f5f9; border-radius: 6px; width: 25px; height: 25px; font-size: 18px; }
+.notification-item { padding: 12px 15px; border-bottom: 1px solid #f0f2f6; display: flex; flex-direction: column; gap: 5px; }
+.notification-item.read { opacity: .62; }
+.notification-item b { font-size: 11px; }
+.notification-item small { font-size: 10px; color: #81899b; }
+.notification-item button { align-self: flex-start; border: 0; background: #eef7ff; color: #2775b8; padding: 5px 8px; border-radius: 6px; font-size: 10px; cursor: pointer; }
+.notification-empty { padding: 22px 16px; font-size: 11px; color: #81899b; line-height: 1.6; }
+@media(max-width:680px) { .module-page--follow-ups .filter-row .btn { margin-left: 0; width: 100%; } .notification-popover { right: -45px; } }
